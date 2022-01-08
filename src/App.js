@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import "./App.css";
+import Header from "./components/Header";
+import { getCats } from "./api/catsApi";
 
 function App() {
+  const [persons, setPersons] = useState([]);
+  const [personsLoaded, setPersonsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      const cats = await getCats();
+      setPersonsLoaded(true);
+      setPersons(cats);
+    }
+    fetchData();
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <div>{personsLoaded && persons.map((p) => <div>{p.name}</div>)}</div>
     </div>
   );
 }
